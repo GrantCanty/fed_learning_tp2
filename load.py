@@ -4,6 +4,7 @@ import pandas as pd
 import numpy as np
 from torch.utils.data import DataLoader, TensorDataset
 from sklearn.model_selection import train_test_split
+import config
 
 
 def load_client_data(cid: int, data_dir: str, batch_size: int) -> tuple[DataLoader, DataLoader]:
@@ -16,8 +17,17 @@ def load_client_data(cid: int, data_dir: str, batch_size: int) -> tuple[DataLoad
     # Reshape X to N x 1 x 28 x 28 (needed for CNNs)
     X = X.reshape(-1, 1, 28, 28)
 
-    # Train/val split
-    X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2, stratify=y, random_state=42)
+    unique_classes, class_counts = np.unique(y, return_counts=True)
+    min_class_count = np.min(class_counts)
+    print(f'len of unique classes: {len(unique_classes)}')
+    print(f'min samples per clas: {len(class_counts)}')
+    # Train/val split depending on how many classes there are
+    if len(unique_classes) == 1 or min_class_count == 1:
+        print('in num 1')
+        X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2, stratify=None, random_state=config.SEED)
+    else:
+        print('in num 2')
+        X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2, stratify=y, random_state=config.SEED)
 
     # Convert to tensors
     X_train_tensor = torch.tensor(X_train)

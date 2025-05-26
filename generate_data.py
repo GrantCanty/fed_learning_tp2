@@ -5,7 +5,7 @@ from torchvision import datasets, transforms
 import config
 
 
-def generate_distributed_datasets(k: int, alpha: float, save_dir: str) -> None:
+def generate_distributed_datasets(k: int, alpha: float, save_dir: str, min_samples_per_client: int = 10) -> None:
     os.makedirs(save_dir, exist_ok=True)
 
     dataset_name = config.DATASET_NAME
@@ -50,7 +50,7 @@ def generate_distributed_datasets(k: int, alpha: float, save_dir: str) -> None:
     client_indices = [[] for _ in range(k)]
     for c in range(num_classes):
         class_idx = class_indices[c]
-        np.random.seed(config.SEED)
+        np.random.seed(config.SEED + c)  # Different seed per class
         np.random.shuffle(class_idx)
 
         proportions = np.random.dirichlet(alpha=np.repeat(alpha, k))
@@ -59,8 +59,18 @@ def generate_distributed_datasets(k: int, alpha: float, save_dir: str) -> None:
 
         for i, idx in enumerate(split_indices):
             client_indices[i].extend(idx.tolist())
-
-    for i, indices in enumerate(client_indices):
+    
+    # Ensure minimum samples per client
+    for i in range(k):
+        if len(client_indices[i]) < min_samples_per_client:
+            print(f"Warning: Client {i} has only {len(client_indices[i])} samples")
+    
+    # Filter out clients with insufficient data
+    valid_clients = [(i, indices) for i, indices in enumerate(client_indices) if len(indices) >= min_samples_per_client]
+    
+    print(f"Creating datasets for {len(valid_clients)} clients (out of {k} requested)")
+    
+    for i, indices in valid_clients:
         client_data = data[indices]
         client_targets = targets[indices]
         
