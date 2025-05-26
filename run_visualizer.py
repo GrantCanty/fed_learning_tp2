@@ -175,14 +175,15 @@ class ResultsVisualizer:
 
 def main():
     parser = argparse.ArgumentParser(description="Run Flower Client")
-    parser.add_argument("--output", type=str, required=True, help="Client ID")
+    parser.add_argument("--input", type=str, required=True, help="name of input json file")
+    parser.add_argument("--output", type=str, required=True, help="Name of files for plots")
     args = parser.parse_args()
     
     # Create visualizer instance
     visualizer = ResultsVisualizer()
     
     # Load simulation results
-    visualizer.load_simulation_results("fl_history.json")
+    visualizer.load_simulation_results(f"fl_history_{args.input}.json")
     
     # Print results table
     visualizer.print_results_table()

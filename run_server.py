@@ -7,9 +7,18 @@ import fed_avg  # Your custom FedAvg strategy
 import custom_client_manager  # Your custom client manager
 from generate_data import generate_distributed_datasets
 from config import NUM_CLIENTS, ALPHA_DIRICHLET, SAVE_PATH, NUM_ROUNDS
+import argparse
+import time
 
 
 def main():
+    # take arg for .json output name
+    parser = argparse.ArgumentParser(description="Run Flower Server")
+    parser.add_argument("--output", type=str, default=f"{time.time()}", 
+                       help="Server address")
+    args = parser.parse_args()    
+
+    
     # create dataset that will be used
     generate_distributed_datasets(NUM_CLIENTS, ALPHA_DIRICHLET, SAVE_PATH)
     
@@ -61,7 +70,7 @@ def main():
             "metrics_distributed": metrics_distributed,
         }
         
-        save_path = Path("fl_history.json")
+        save_path = Path(f"fl_history_{args.output}.json")
         with open(save_path, "w") as f:
             json.dump(results, f, indent=4)
 
