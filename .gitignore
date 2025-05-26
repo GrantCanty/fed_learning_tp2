@@ -1,0 +1,8 @@
+data/
+__pycache__/
+*.pyc
+tp1_round2
+*.json
+client_data/
+venv/
+*.ipynb
