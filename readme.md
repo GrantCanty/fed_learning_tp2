@@ -1,8 +1,11 @@
-# TP1
+# TP2
 
-## Step 1
-Data generation is taken care of by the `generate_data.py` and data loading is taken care of by the `load.py` file  
-Newly generated data is saved to the `client_data` folder  
+## Fed AVG
+results for FED AVG are saved in the following files:
+ALPHA 1: `fl_history_round_1.json`  
+ALPHA 0.1: `fl_history_round_2.json`  
+ALPHA 10: `fl_history_round_3.json`  
+
 
 ## Step 2
 This is taken care of by the `model.py` file  

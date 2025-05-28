@@ -19,14 +19,10 @@ def load_client_data(cid: int, data_dir: str, batch_size: int) -> tuple[DataLoad
 
     unique_classes, class_counts = np.unique(y, return_counts=True)
     min_class_count = np.min(class_counts)
-    print(f'len of unique classes: {len(unique_classes)}')
-    print(f'min samples per clas: {len(class_counts)}')
     # Train/val split depending on how many classes there are
     if len(unique_classes) == 1 or min_class_count == 1:
-        print('in num 1')
         X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2, stratify=None, random_state=config.SEED)
     else:
-        print('in num 2')
         X_train, X_val, y_train, y_val = train_test_split(X, y, test_size=0.2, stratify=y, random_state=config.SEED)
 
     # Convert to tensors

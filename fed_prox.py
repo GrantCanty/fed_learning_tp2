@@ -16,7 +16,7 @@ from flwr.server.strategy import Strategy
 import config
 
 
-class FedAvgStrategy(Strategy):
+class FedProxStrategy(Strategy):
     def __init__(
         self,
         fraction_fit: float = 1.0,
