@@ -3,7 +3,7 @@ import json
 import flwr as fl
 from flwr.server import ServerConfig, Server
 from flwr.server.history import History
-import scaffold_claude
+import scaffold_v2
 import custom_client_manager  # Your custom client manager
 from generate_data import generate_distributed_datasets
 from config import NUM_CLIENTS, ALPHA_DIRICHLET, SAVE_PATH, NUM_ROUNDS
@@ -37,7 +37,7 @@ def main():
     client_manager = custom_client_manager.CustomClientManager()
     
     # 4. Configure the strategy with proper minimums
-    strategy = scaffold_claude.ScaffoldStrategy(
+    strategy = scaffold_v2.ScaffoldStrategy(
         min_fit_clients=NUM_CLIENTS,
         min_evaluate_clients=NUM_CLIENTS,
         min_available_clients=NUM_CLIENTS
