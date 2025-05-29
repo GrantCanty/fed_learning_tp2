@@ -37,7 +37,8 @@ def main():
     print(f"Connecting to server at {args.server}")
     fl.client.start_client(
         server_address=args.server,
-        client=client.to_client()
+        client=client.to_client(),
+        grpc_max_message_length=1024*1024*1024
     )
 
 

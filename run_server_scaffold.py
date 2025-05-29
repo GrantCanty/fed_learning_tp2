@@ -53,7 +53,8 @@ def main():
             server_address=server_address,
             config=config,
             strategy=strategy,
-            client_manager=client_manager
+            client_manager=client_manager,
+            grpc_max_message_length=1024*1024*1024
         )
 
         print("Training completed! Saving results...")

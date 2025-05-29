@@ -36,13 +36,15 @@ class CustomClient(flwr.client.Client):
             parameters=parameters
         )
 
-    def scaffold_train_epoch(self, train_loader, criterion, optimizer, device, global_control, local_control):
+    def train_epoch(self, train_loader, criterion, optimizer, device, global_control, local_control):
         """Custom training epoch that implements SCAFFOLD algorithm."""
         self.model.train()
         total_loss = 0.0
         correct = 0
         total = 0
         batch_count = 0
+        correct_total = 0
+        total_samples = 0
         
         for batch_idx, (data, target) in enumerate(train_loader):
             data, target = data.to(device), target.to(device)
@@ -59,21 +61,28 @@ class CustomClient(flwr.client.Client):
                         # Apply SCAFFOLD correction: subtract global control and add local control
                         param.grad.data = param.grad.data - c_global + c_local
             
+            torch.nn.utils.clip_grad_norm_(self.model.parameters(), max_norm=0.25)
+            
             optimizer.step()
             
             # Statistics
-            total_loss += loss.item()
+            total_loss += loss.item() * data.size(0)
             pred = output.argmax(dim=1, keepdim=True)
             correct += pred.eq(target.view_as(pred)).sum().item()
             total += target.size(0)
             batch_count += 1
+            correct_total += correct
+            total_samples += total
             
             if batch_idx % 100 == 0:
                 print(f'Client {self.cid}: Batch {batch_idx}/{len(train_loader)}, '
                       f'Loss: {loss.item():.4f}')
         
-        avg_loss = total_loss / len(train_loader)
-        accuracy = 100. * correct / total
+        avg_loss = total_loss / total
+        accuracy = correct_total / total_samples
+
+        param_norm = sum(p.norm().item() for p in self.model.parameters())
+        print(f"[{self.cid}] Parameter norm after training: {param_norm}")
         
         return avg_loss, accuracy, batch_count
 
@@ -102,7 +111,7 @@ class CustomClient(flwr.client.Client):
             print(f"Client {self.cid}: Training epoch {epoch+1}/{config.EPOCHS}")
             
             # Use our custom SCAFFOLD training function
-            loss, acc, batch_count = self.scaffold_train_epoch(
+            loss, acc, batch_count = self.train_epoch(
                 self.train_loader, 
                 self.criterion, 
                 self.optimizer, 
@@ -182,14 +191,14 @@ class CustomClient(flwr.client.Client):
                 data, target = data.to(self.device), target.to(self.device)
                 output = self.model(data)
                 loss = self.criterion(output, target)
-                total_loss += loss.item()
+                total_loss += loss.item() * data.size(0)
                 
                 pred = output.argmax(dim=1, keepdim=True)
                 correct += pred.eq(target.view_as(pred)).sum().item()
                 total += target.size(0)
         
-        avg_loss = total_loss / len(self.test_loader)
-        accuracy = 100. * correct / total
+        avg_loss = total_loss / total
+        accuracy = correct / total
         
         return avg_loss, accuracy
 
