@@ -39,12 +39,6 @@ class CustomFashionModel(nn.Module):
             loss = criterion(outputs, labels)
             loss.backward()
             
-            # fed prox: proximal term
-            '''prox = 0
-            for param_local, param_global in zip(self.parameters(), global_model.parameters()):
-                prox += ((param_local - param_global.detach()) **2).sum()
-            fedprox_loss = loss + (proximal_term / 2) * prox'''
-            
             for idx, param in enumerate(self.parameters()):
                 if param.grad is not None:
                     param.grad += self.c[idx] - self.ck[idx]  # Adjust gradient
