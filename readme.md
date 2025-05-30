@@ -1,96 +1,172 @@
 # TP2
 
 ## Fed AVG
-results for FED AVG are saved in the following files:
-ALPHA 1: `fl_history_round_1.json`  
-ALPHA 0.1: `fl_history_round_2.json`  
-ALPHA 10: `fl_history_round_3.json`  
+results for FED AVG are saved in the following files:  
+ALPHA 0.1:  `fl_history_round_1.json`  
+ALPHA 1:    `fl_history_round_2.json`  
+ALPHA 10:   `fl_history_round_3.json`  
+
+The code for this simulation is contained in the following files:  
+client:     `client.py`  
+strategy:   `fed_avg.py`  
+model:      `model.py`  
+run client: `run_client.py`  
+server:     `run_server.py`  
+
+### Results
+#### Alpha 0.1
+[![Image 1](plots/accuracy_eval_plot_10_clients_50_rounds_1_epoch_0.1_alpha.png)](plots/accuracy_eval_plot_10_clients_50_rounds_1_epoch_0.1_alpha.png)
+[![Image 2](plots/accuracy_fit_plot_10_clients_50_rounds_1_epoch_0.1_alpha.png)](plots/accuracy_fit_plot_10_clients_50_rounds_1_epoch_0.1_alpha.png)
+[![Image 3](plots/loss_fit_plot_10_clients_50_rounds_1_epoch_0.1_alpha.png)](plots/loss_fit_plot_10_clients_50_rounds_1_epoch_0.1_alpha.png)
+[![Image 4](plots/losses_distributed_plot_10_clients_50_rounds_1_epoch_0.1_alpha.png)](plots/losses_distributed_plot_10_clients_50_rounds_1_epoch_0.1_alpha.png)
+
+#### Alpha 1
+[![Image 5](plots/accuracy_eval_plot_10_clients_50_rounds_1_epoch_1_alpha.png)](plots/accuracy_eval_plot_10_clients_50_rounds_1_epoch_1_alpha.png)
+[![Image 6](plots/accuracy_fit_plot_10_clients_50_rounds_1_epoch_1_alpha.png)](plots/accuracy_fit_plot_10_clients_50_rounds_1_epoch_1_alpha.png)
+[![Image 7](plots/loss_fit_plot_10_clients_50_rounds_1_epoch_1_alpha.png)](plots/loss_fit_plot_10_clients_50_rounds_1_epoch_1_alpha.png)
+[![Image 8](plots/losses_distributed_plot_10_clients_50_rounds_1_epoch_1_alpha.png)](plots/losses_distributed_plot_10_clients_50_rounds_1_epoch_1_alpha.png)
+
+#### Alpha 10
+[![Image 9](plots/accuracy_eval_plot_10_clients_50_rounds_1_epoch_10_alpha.png)](plots/accuracy_eval_plot_10_clients_50_rounds_1_epoch_10_alpha.png)
+[![Image 10](plots/accuracy_fit_plot_10_clients_50_rounds_1_epoch_10_alpha.png)](plots/accuracy_fit_plot_10_clients_50_rounds_1_epoch_10_alpha.png)
+[![Image 11](plots/loss_fit_plot_10_clients_50_rounds_1_epoch_10_alpha.png)](plots/loss_fit_plot_10_clients_50_rounds_1_epoch_10_alpha.png)
+[![Image 12](plots/losses_distributed_plot_10_clients_50_rounds_1_epoch_10_alpha.png)](plots/losses_distributed_plot_10_clients_50_rounds_1_epoch_10_alpha.png)
+
+Alpha 0.1:  
+Accuracy evaluation ≈ 0.79  
+Accuracy fit ≈ 0.93  
+Loss fit ≈ 0.22  
+Loss distributed ≈ 0.58  
+
+Alpha 1:  
+Accuracy evaluation ≈ 0.82  
+Accuracy fit ≈ 0.85  
+Loss fit ≈ 0.4  
+Loss distributed ≈ 0.47  
+
+Alpha 10:  
+Accuracy evaluation ≈ 0.84  
+Accuracy fit ≈ 0.83  
+Loss fit ≈ 0.46  
+Loss distributed ≈ 0.46  
+
+### Results Summary
+During Alpha 0.1, we see a large difference between the accuracy fit (accuracy on training data) and the accuracy evaluation (accuracy on test data). We can also see something similar for the loss values, where loss fit (weighted avg of loss on training data) is much lower than the distributed loss (aggregated loss across clients). I believe this is due to the non-IID nature of this data. It's very easy for the clients to overfit on their training data, leading to bad results on unseen data. Their training data is oversimplified and is lacking the complexity that leads to good generalization. The learning curves on aggregations are bumpy as well, which hints that the learning is unstable, likely due to overfitting.  
+
+During Alpa 1, there is still a descrepency between accuracy evaluation and accuracy fit, but it is pretty small. Something similar is happening with loss as well, where loss fit ends slightly lower than loss distributed. With higher data heterogeneity, the clients are able to generalize better than before and we even see a higher accuracy evaluation when compared to Alpha 0.1. It looks like the learning is much less prone to overfitting, and the learning curves on aggregated data are much less bumpy, which is a good sign that the learning is stablizing between clients.  
+
+During Alpha 10, we see essentially the same results for accuracy and loss. This makes sense as an alpha of 10 is large and ensures high data heterogenity acros all clients. If all clients are receiving similar training datasets, aggregating clients should lead to similar results, which is ultimately what we are seeing. Lastly, we see a higher accuracy evaluation on Alpha 10 than any other Alpha value. The learning curves on aggregated data is very smooth as well, which tells us that the learning is very stable between each client and we aren't seeing overfitting on each client.  
 
 
-## Step 2
-This is taken care of by the `model.py` file  
+## Fed Prox
+results for FED Prox are saved in the following files:  
+ALPHA 0.1:  `fl_history_round_4.json`  
+ALPHA 1:    `fl_history_round_5.json`   
+ALPHA 10:   `fl_history_round_6.json`  
 
-## Step 3
-This is taken care of by the `client.py` file  
+client:     `client_fedprox.py`  
+strategy:   `fed_prox.py`  
+model:      `model_fedprox.py`  
+run client: `run_client_fedprox.py`  
+server:     `run_server_fedprox.py`  
 
-## Step 4
-This is taken care of by the `run_client.py` file. The command `python3 run_client.py --cid INTEGER` will run the client. The server must be running or else the client will fail  
+### Results
+#### Alpha 0.1
+[![Image 13](plots/accuracy_eval_plot_fedprox_10_clients_50_rounds_1_epoch_0.1_alpha.png)](plots/accuracy_eval_plot_fedprox_10_clients_50_rounds_1_epoch_0.1_alpha.png)
+[![Image 14](plots/accuracy_fit_plot_fedprox_10_clients_50_rounds_1_epoch_0.1_alpha.png)](plots/accuracy_fit_plot_fedprox_10_clients_50_rounds_1_epoch_0.1_alpha.png)
+[![Image 15](plots/loss_fit_plot_fedprox_10_clients_50_rounds_1_epoch_0.1_alpha.png)](plots/loss_fit_plot_fedprox_10_clients_50_rounds_1_epoch_0.1_alpha.png)
+[![Image 16](plots/losses_distributed_plot_fedprox_10_clients_50_rounds_1_epoch_0.1_alpha.png)](plots/losses_distributed_plot_fedprox_10_clients_50_rounds_1_epoch_0.1_alpha.png)
 
-## Step 5
-The client manager is taken care of by the `custom_client_manager.py` file and the strategy is taken care of by the `fed_avg.py` file  
+#### Alpha 1
+[![Image 17](plots/accuracy_eval_plot_fedprox_10_clients_50_rounds_1_epoch_1_alpha.png)](plots/accuracy_eval_plot_fedprox_10_clients_50_rounds_1_epoch_1_alpha.png)
+[![Image 18](plots/accuracy_fit_plot_fedprox_10_clients_50_rounds_1_epoch_1_alpha.png)](plots/accuracy_fit_plot_fedprox_10_clients_50_rounds_1_epoch_1_alpha.png)
+[![Image 19](plots/loss_fit_plot_fedprox_10_clients_50_rounds_1_epoch_1_alpha.png)](plots/loss_fit_plot_fedprox_10_clients_50_rounds_1_epoch_1_alpha.png)
+[![Image 20](plots/losses_distributed_plot_fedprox_10_clients_50_rounds_1_epoch_1_alpha.png)](plots/losses_distributed_plot_fedprox_10_clients_50_rounds_1_epoch_1_alpha.png)
 
-## Step 6
-The server is contained in the `run_server.py` file. The following command runs the server `python3 run_server.py`  
+#### Alpha 10
+[![Image 21](plots/accuracy_eval_plot_fedprox_10_clients_50_rounds_1_epoch_10_alpha.png)](plots/accuracy_eval_plot_fedprox_10_clients_50_rounds_1_epoch_10_alpha.png)
+[![Image 22](plots/accuracy_fit_plot_fedprox_10_clients_50_rounds_1_epoch_10_alpha.png)](plots/accuracy_fit_plot_fedprox_10_clients_50_rounds_1_epoch_10_alpha.png)
+[![Image 23](plots/loss_fit_plot_fedprox_10_clients_50_rounds_1_epoch_10_alpha.png)](plots/loss_fit_plot_fedprox_10_clients_50_rounds_1_epoch_10_alpha.png)
+[![Image 24](plots/losses_distributed_plot_fedprox_10_clients_50_rounds_1_epoch_10_alpha.png)](plots/losses_distributed_plot_fedprox_10_clients_50_rounds_1_epoch_10_alpha.png)
 
-## Step 7
-This is taken care of by the `run_visualizer.py` file. The following command runs the data visualization: `python3 run_visualizer.py  --output NAME_OF_OUTPUT`  
-Results are saved to the `plots` folder and end with what the user has enetered for NAME_OF_OUTPUT. The title of each plots also contains the NAME_OF_OUTPUT string
+Alpha 0.1:  
+Accuracy evaluation ≈ 0.8  
+Accuracy fit ≈ 0.93  
+Loss fit ≈ 0.2  
+Loss distributed ≈ 0.57  
 
-## Step 8
-Hyperparameters are saved to the `config.py`  
-In order to run the simulation, Multiple terminal tabs need to be opened. Each terminal will need to run the virtual environment in the folder. Complete the following steps to run the simulation
-1. Open terminal and run `source venv/bin/activate` to run the Python virtual environment  
-2. Run `python3 run_server.py`. The server will now be waiting for the specified number of clients to connect
-3. Open as many terminal tabs as clients are required
-4. In each newly opened terminal, run the following commands:
-    1. `source venv/bin/activate` to run the Python virtual environment  
-    2. `python3 run_client.py --cid INTEGER` making sure to change the CID Integer for each client  
-5. Wait for the tests to complete
-6. Run `python3 run_visualizer.py --output NAME_OF_OUTPUT` to generate the images for reporting  
+Alpha 1:  
+Accuracy evaluation ≈ 0.85  
+Accuracy fit ≈ 0.85  
+Loss fit ≈ 0.4  
+Loss distributed ≈ 0.37  
 
-### Simulation 1
-Num of clients: 10  
-Alpha: 1  
-Rounds: 30  
-Epochs: 1  
-Dataset: Fashion MNIST  
-Batch size: 32  
-Learning Rate: 0.01  
-[![Image 1](plots/accuracy_eval_plot_10_clients_30_rounds_1_epoch_1_alpha.png)](plots/accuracy_eval_plot_10_clients_30_rounds_1_epoch_1_alpha.png)
-[![Image 2](plots/accuracy_fit_plot_10_clients_30_rounds_1_epoch_1_alpha.png)](plots/accuracy_fit_plot_10_clients_30_rounds_1_epoch_1_alpha.png)
-[![Image 3](plots/loss_fit_plot_10_clients_30_rounds_1_epoch_1_alpha.png)](plots/loss_fit_plot_10_clients_30_rounds_1_epoch_1_alpha.png)
-[![Image 4](plots/losses_distributed_plot_10_clients_30_rounds_1_epoch_1_alpha.png)](plots/losses_distributed_plot_10_clients_30_rounds_1_epoch_1_alpha.png)
+Alpha 10:  
+Accuracy evaluation ≈ 0.84  
+Accuracy fit ≈ 0.83  
+Loss fit ≈ 0.46  
+Loss distributed ≈ 0.46  
 
-Since this is our first simulation and it uses all the given hyper parameters, we will use this as a baseline for future simulations.  
+### Results Summary
+During Alpha 0.1, we see a large difference between the accuracy fit (accuracy on training data) and the accuracy evaluation (accuracy on test data). We can also see something similar for the loss values, where loss fit (weighted avg of loss on training data) is much lower than the distributed loss (aggregated loss across clients). I believe this is due to the non-IID nature of this data. It's very easy for the clients to overfit on their training data, leading to bad results on unseen data. Their training data is oversimplified and is lacking the complexity that leads to good generalization. The learning curves on aggregations are bumpy as well, which hints that the learning is unstable, likely due to overfitting.  
 
-### Simulation 2
-Num of clients: 10  
-Alpha: 5  
-Rounds: 30  
-Epochs: 1  
-Dataset: Fashion MNIST  
-Batch size: 32  
-Learning Rate: 0.01   
-[![Image 1](plots/accuracy_eval_plot_10_clients_30_rounds_1_epoch_5_alpha.png)](plots/accuracy_eval_plot_10_clients_30_rounds_1_epoch_5_alpha.png)
-[![Image 2](plots/accuracy_fit_plot_10_clients_30_rounds_1_epoch_5_alpha.png)](plots/accuracy_fit_plot_10_clients_30_rounds_1_epoch_5_alpha.png)
-[![Image 3](plots/loss_fit_plot_10_clients_30_rounds_1_epoch_5_alpha.png)](plots/loss_fit_plot_10_clients_30_rounds_1_epoch_5_alpha.png)
-[![Image 4](plots/losses_distributed_plot_10_clients_30_rounds_1_epoch_5_alpha.png)](plots/losses_distributed_plot_10_clients_30_rounds_1_epoch_5_alpha.png)
+During Alpa 1, there is still a descrepency between accuracy evaluation and accuracy fit, but it is pretty small. Something similar is happening with loss as well, where loss fit ends slightly lower than loss distributed. With higher data heterogeneity, the clients are able to generalize better than before and we even see a higher accuracy evaluation when compared to Alpha 0.1. It looks like the learning is much less prone to overfitting, and the learning curves on aggregated data are much less bumpy, which is a good sign that the learning is stablizing between clients.  
 
-In this simulation, I kept all parameters the same but increased the Alpha from 1 to 5. We can see that learning is slightly more stable than before which makes sense due to the increased homogenity in the datasets as a direct result from the increase in Alpha. With more overlapping data, we expect the local minima of each client to be closer than before, leading to less variation in the plot history. This is most prominent on the Accuracy Evaluation plot.  
+During Alpha 10, we see essentially the same results for accuracy and loss. This makes sense as an alpha of 10 is large and ensures high data heterogenity acros all clients. If all clients are receiving similar training datasets, aggregating clients should lead to similar results, which is ultimately what we are seeing. Lastly, we see a higher accuracy evaluation on Alpha 10 than any other Alpha value. The learning curves on aggregated data is very smooth as well, which tells us that the learning is very stable between each client and we aren't seeing overfitting on each client.  
 
-### Simulation 3
-Num of clients: 10  
-Alpha: 1  
-Rounds: 30  
-Epochs: 3  
-Dataset: Fashion MNIST  
-Batch size: 32  
-Learning Rate: 0.01  
-[![Image 1](plots/accuracy_eval_plot_10_clients_30_rounds_3_epochs_1_alpha.png)](plots/accuracy_eval_plot_10_clients_30_rounds_3_epochs_1_alpha.png)
-[![Image 2](plots/accuracy_fit_plot_10_clients_30_rounds_3_epochs_1_alpha.png)](plots/accuracy_fit_plot_10_clients_30_rounds_3_epochs_1_alpha.png)
-[![Image 3](plots/loss_fit_plot_10_clients_30_rounds_3_epochs_1_alpha.png)](plots/loss_fit_plot_10_clients_30_rounds_3_epochs_1_alpha.png)
-[![Image 4](plots/losses_distributed_plot_10_clients_30_rounds_3_epochs_1_alpha.png)](plots/losses_distributed_plot_10_clients_30_rounds_3_epochs_1_alpha.png)
+## Scaffold
+results for FED Prox are saved in the following files:  
+ALPHA 0.1: `fl_history_round_7.json`  
+ALPHA 1: `fl_history_round_8.json`  
+ALPHA 10: `fl_history_round_9.json`  
 
-In this simulation, I kept all parameters the same from the 1st simulation but increased the Epoch count from 1 to 3. The learning appears to also be slightly more stable than the baseline, potentially due to the fact that the higher epoch count gives the clients more instances to train the model and adjust the weights. I was expecting there to be more client drift, giving plots with more variations but that was not the case in this simulation.  
+The code for this simulation is contained in the following files:  
+client:     `client_scaffold.py`  
+strategy:   `scaffold.py`  
+model:      `model_scaffold.py`  
+run client: `run_client_scaffold.py`  
+server:     `run_server_scaffold.py`  
 
-### Simulation 4
-num of clients: 5  
-alpha: 1  
-rounds: 30  
-epoch: 3  
-[![Image 1](plots/accuracy_eval_plot_5_clients_30_rounds_3_epochs_1_alpha.png)](plots/accuracy_eval_plot_5_clients_30_rounds_3_epochs_1_alpha.png)
-[![Image 2](plots/accuracy_fit_plot_5_clients_30_rounds_3_epochs_1_alpha.png)](plots/accuracy_fit_plot_5_clients_30_rounds_3_epochs_1_alpha.png)
-[![Image 3](plots/loss_fit_plot_5_clients_30_rounds_3_epochs_1_alpha.png)](plots/loss_fit_plot_5_clients_30_rounds_3_epochs_1_alpha.png)
-[![Image 4](plots/losses_distributed_plot_5_clients_30_rounds_3_epochs_1_alpha.png)](plots/losses_distributed_plot_5_clients_30_rounds_3_epochs_1_alpha.png)
+### Results
+#### Alpha 0.1
+[![Image 25](plots/accuracy_eval_plot_scaffold_10_clients_50_rounds_1_epoch_0.1_alpha.png)](plots/accuracy_eval_plot_scaffold_10_clients_50_rounds_1_epoch_0.1_alpha.png)
+[![Image 26](plots/accuracy_fit_plot_scaffold_10_clients_50_rounds_1_epoch_0.1_alpha.png)](plots/accuracy_fit_plot_scaffold_10_clients_50_rounds_1_epoch_0.1_alpha.png)
+[![Image 27](plots/loss_fit_plot_scaffold_10_clients_50_rounds_1_epoch_0.1_alpha.png)](plots/loss_fit_plot_scaffold_10_clients_50_rounds_1_epoch_0.1_alpha.png)
+[![Image 28](plots/losses_distributed_plot_scaffold_10_clients_50_rounds_1_epoch_0.1_alpha.png)](plots/losses_distributed_plot_scaffold_10_clients_50_rounds_1_epoch_0.1_alpha.png)
 
-In this simulation, I kept all parameters the same from the 3rd simulation but decreased the Client count from 10 to 5. This made the learning more unstable which isn't too surprising, as we have fewer gradients than before and a low alpha, so we can expect any client drift to have a larger effect on the model than before. Surprisingly though, the simulations ends up giving similar end results compared to simulation 3.  
+#### Alpha 1
+[![Image 29](plots/accuracy_eval_plot_scaffold_10_clients_50_rounds_1_epoch_1_alpha.png)](plots/accuracy_eval_plot_scaffold_10_clients_50_rounds_1_epoch_1_alpha.png)
+[![Image 30](plots/accuracy_fit_plot_scaffold_10_clients_50_rounds_1_epoch_1_alpha.png)](plots/accuracy_fit_plot_scaffold_10_clients_50_rounds_1_epoch_1_alpha.png)
+[![Image 31](plots/loss_fit_plot_scaffold_10_clients_50_rounds_1_epoch_1_alpha.png)](plots/loss_fit_plot_scaffold_10_clients_50_rounds_1_epoch_1_alpha.png)
+[![Image 32](plots/losses_distributed_plot_scaffold_10_clients_50_rounds_1_epoch_1_alpha.png)](plots/losses_distributed_plot_scaffold_10_clients_50_rounds_1_epoch_1_alpha.png)
+
+#### Alpha 10
+[![Image 33](plots/accuracy_eval_plot_scaffold_10_clients_50_rounds_1_epoch_10_alpha.png)](plots/accuracy_eval_plot_scaffold_10_clients_50_rounds_1_epoch_10_alpha.png)
+[![Image 34](plots/accuracy_fit_plot_scaffold_10_clients_50_rounds_1_epoch_10_alpha.png)](plots/accuracy_fit_plot_scaffold_10_clients_50_rounds_1_epoch_10_alpha.png)
+[![Image 35](plots/loss_fit_plot_scaffold_10_clients_50_rounds_1_epoch_10_alpha.png)](plots/loss_fit_plot_scaffold_10_clients_50_rounds_1_epoch_10_alpha.png)
+[![Image 36](plots/losses_distributed_plot_scaffold_10_clients_50_rounds_1_epoch_10_alpha.png)](plots/losses_distributed_plot_scaffold_10_clients_50_rounds_1_epoch_10_alpha.png)
+
+Alpha 0.1:  
+Accuracy evaluation ≈ 0.42  
+Accuracy fit ≈ 0.77  
+Loss fit ≈ 0.74  
+Loss distributed ≈ 2.55  
+
+Alpha 1:  
+Accuracy evaluation ≈ 0.72  
+Accuracy fit ≈ 0.77  
+Loss fit ≈ 1.03  
+Loss distributed ≈ 1.22  
+
+Alpha 10:  
+Accuracy evaluation ≈ 0.72  
+Accuracy fit ≈ 0.73  
+Loss fit ≈ 1.41  
+Loss distributed ≈ 1.43  
+
+### Results Summary
+During Alpha 0.1, we see a large difference between the accuracy fit (accuracy on training data) and the accuracy evaluation (accuracy on test data). We can also see something similar for the loss values, where loss fit (weighted avg of loss on training data) is much lower than the distributed loss (aggregated loss across clients). I believe this is due to the non-IID nature of this data. It's very easy for the clients to overfit on their training data, leading to bad results on unseen data. Their training data is oversimplified and is lacking the complexity that leads to good generalization. The learning curves on aggregations are bumpy as well, which hints that the learning is unstable, likely due to overfitting.  
+
+During Alpa 1, there is still a descrepency between accuracy evaluation and accuracy fit, but it is pretty small. Something similar is happening with loss as well, where loss fit ends slightly lower than loss distributed. With higher data heterogeneity, the clients are able to generalize better than before and we even see a higher accuracy evaluation when compared to Alpha 0.1. It looks like the learning is much less prone to overfitting, and the learning curves on aggregated data are much less bumpy, which is a good sign that the learning is stablizing between clients.  
+
+During Alpha 10, we see essentially the same results for accuracy and loss. This makes sense as an alpha of 10 is large and ensures high data heterogenity acros all clients. If all clients are receiving similar training datasets, aggregating clients should lead to similar results, which is ultimately what we are seeing. Lastly, we see a higher accuracy evaluation on Alpha 10 than any other Alpha value. The learning curves on aggregated data is very smooth as well, which tells us that the learning is very stable between each client and we aren't seeing overfitting on each client.  

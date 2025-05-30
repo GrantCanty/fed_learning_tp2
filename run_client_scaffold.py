@@ -2,7 +2,7 @@ import argparse
 import torch
 import flwr as fl
 #from client_scaffold_cl import CustomClient  # Your custom client implementation
-from client_scaffold_v2 import CustomClient
+from client_scaffold import CustomClient
 from load import load_client_data  # Your data loading function
 from model_fedprox import CustomFashionModel  # Your model implementation
 import config
