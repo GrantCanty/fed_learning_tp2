@@ -166,8 +166,10 @@ Loss fit ≈ 1.41
 Loss distributed ≈ 1.43  
 
 ### Results Summary
-During Alpha 0.1 for Scaffold, we get a pretty similar pattern as before. We have a large difference between the accuracy fit (accuracy on training data) and the accuracy evaluation (accuracy on test data). We see similar results for the loss values as well, with loss fit (weighted avg of loss on training data) being much lower than the distributed loss (aggregated loss across clients). This was unexpected to me as I thought that scaffold would provide better generatlization than Fed Avg or Fed Prox, but the data might just not be heterogeneous enough for it to work well.  
+During Alpha 0.1 for Scaffold, we get a pretty similar pattern as before. We have a large difference between the accuracy fit (accuracy on training data) and the accuracy evaluation (accuracy on test data). We see similar results for the loss values as well, with loss fit (weighted avg of loss on training data) being much lower than the distributed loss (aggregated loss across clients). This was unexpected to me as I thought that scaffold would provide better generatlization than Fed Avg or Fed Prox for non-IID data, but the data might just not be heterogeneous enough for it to work well.  
 
-During Alpa 1, we see pretty similar results between our accuracy and loss measure, but the difference is larger than it was with Fed Prox.  
+During Alpa 1, we see pretty similar results between our accuracy and loss measure, but the difference is larger than it was with Fed Prox. This was also surprising to me for the same reason as last simulation.  
 
-During Alpha 10, we see very similar results for accuracy and loss. Like in Fed Avg, I believe the similarities in loss and accuracy are due to the data being highly heterogenous and less likely due to the strategy that we're using.  
+During Alpha 10, we see very similar results for accuracy and loss. Like with Fed Avg and Fed Prox, I believe the similarities in loss and accuracy are due to the data being highly heterogenous and less likely due to the specific strategy that we're using. With highly heterogeneous data between each client, we shouldn't expect much client drift, if any, leading to very similar results between accuracy and loss measures.  
+
+Something that did worry me about the results of Scaffold was the loss values. Towards the end of each simulation, we saw the values for loss start to increase rapidly. This is worrying to me as I expect results for loss to continue to decrease, not increase for each round.
